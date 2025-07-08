@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Setup Tutorial - Complete Beginner's Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+        .theory-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .step-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        .keyword {
+            background: #fbbf24;
+            color: #1f2937;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .explanation-box {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+        }
+        .code-explanation {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl font-bold mb-4">Django Fashionista Project</h1>
+            <p class="text-xl opacity-90">Complete Step-by-Step Guide for Absolute Beginners</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="showSection('theory')" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Theory</button>
+                <button onclick="showSection('day1')" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Day 1: Setup</button>
+                <button onclick="showSection('day2')" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">Day 2: Authentication</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Theory Section -->
+    <section id="theory" class="theory-section py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12">Understanding Django - The Theory</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white/10 backdrop-blur-md rounded-lg p-8">
+                    <h3 class="text-2xl font-bold mb-4">What is Django?</h3>
+                    <p class="text-lg leading-relaxed">
+                        Django is like a construction kit for websites. Imagine you're building a house - Django provides all the pre-made parts (walls, doors, windows) so you can assemble them quickly rather than making everything from scratch. It's written in Python, which is known for being easy to read and write.
+                    </p>
+                    <p class="mt-4 text-lg leading-relaxed">
+                        Django handles the boring, repetitive tasks for you (like user logins, database connections) so you can focus on the unique parts of your website.
+                    </p>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-md rounded-lg p-8">
+                    <h3 class="text-2xl font-bold mb-4">Why Use Django?</h3>
+                    <ul class="text-lg space-y-2">
+                        <li>✅ <strong>Fast Development:</strong> Like using prefabricated parts to build a house faster</li>
+                        <li>✅ <strong>Secure:</strong> Automatically protects against common hacker attacks</li>
+                        <li>✅ <strong>Scalable:</strong> Can handle small blogs or huge sites like Instagram</li>
+                        <li>✅ <strong>Batteries Included:</strong> Comes with tools for user accounts, admin panels, and more</li>
+                        <li>✅ <strong>Organized:</strong> Forces you to structure your code neatly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-16 bg-white/10 backdrop-blur-md rounded-lg p-8">
+                <h3 class="text-3xl font-bold mb-6">Key Django Concepts Explained Simply</h3>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="bg-yellow-400 text-gray-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 text-2xl font-bold">P</div>
+                        <h4 class="text-xl font-bold mb-2">Project</h4>
+                        <p>The entire website container. Like a house that contains all rooms. When you start a new Django project, it's like buying a plot of land and getting the basic structure (foundation, outer walls) set up.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-green-400 text-gray-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 text-2xl font-bold">A</div>
+                        <h4 class="text-xl font-bold mb-2">Apps</h4>
+                        <p>Modular components that do specific jobs. Like rooms in a house - kitchen (cooking), bedroom (sleeping), bathroom (washing). In our project: accounts (logins), products (items for sale), core (shared features).</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-purple-400 text-gray-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 text-2xl font-bold">M</div>
+                        <h4 class="text-xl font-bold mb-2">Models</h4>
+                        <p>Blueprints for your database. Like forms you fill out - each field is a piece of information. A User model might have: name (text), age (number), join date (date). Django converts these to database tables.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Day 1 Section -->
+    <section id="day1" class="hidden py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12">Day 1: Project Setup</h2>
+            
+            <!-- Step 1 -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-blue-600 mb-4">Step 1: Install Required Tools</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Why These Tools?</h4>
+                    <p>Before building our Django house, we need tools:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><span class="keyword">Python</span> - The programming language we'll use (like the language builders speak)</li>
+                        <li><span class="keyword">Pip</span> - Python's package installer (like an app store for Python tools)</li>
+                        <li><span class="keyword">Virtual Environment</span> - A sandbox to keep our project separate from other Python projects on our computer</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg mb-4">
+                    <pre><code># Check if Python is installed (must be version 3.8 or higher)
+python --version</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What this does:</strong> Checks which Python version you have. You should see something like "Python 3.8.5". If you get an error, you need to install Python first from python.org.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Install virtual environment tool
+pip install virtualenv</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What this does:</strong> Installs the <code>virtualenv</code> tool that lets us create isolated Python environments. It's like getting a tool that can create separate workspaces for different projects.</p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-green-600 mb-4">Step 2: Create Project Structure</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Virtual Environment Explained</h4>
+                    <p>Imagine you're a chef working on multiple recipes. You wouldn't want the spices from one recipe mixing with another. A virtual environment keeps your project's ingredients (Python packages) separate from other projects.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg mb-4">
+                    <pre><code># Create and navigate to project folder
+mkdir Fashionista
+cd Fashionista</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What this does:</strong> Creates a new folder called "Fashionista" for our project and moves into it. Like creating a new folder on your desktop for a school project.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg mb-4">
+                    <pre><code># Create virtual environment named 'env'
+python -m venv env</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What this does:</strong> Creates a new virtual environment called "env" inside our project folder. This is like setting up a new, clean kitchen where we'll install only the tools we need for this project.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Activate the virtual environment
+# Windows:
+env\Scripts\activate
+# Mac/Linux:
+source env/bin/activate</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What this does:</strong> "Turns on" the virtual environment. You'll see <code>(env)</code> appear at the start of your command line, showing you're working inside the environment. Now any tools you install will stay in this project only.</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-purple-600 mb-4">Step 3: Install Django Framework</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Understanding Django Packages</h4>
+                    <p>We need two main packages:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><span class="keyword">Django</span> - The main framework (like the construction materials for our house)</li>
+                        <li><span class="keyword">DRF (Django REST Framework)</span> - Adds API capabilities (like adding phone lines to our house for communication)</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Install Django and Django REST Framework
+pip install django djangorestframework</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What this does:</strong> Downloads and installs both packages into your virtual environment. This is like going to the hardware store and buying lumber (Django) and telephone wiring (DRF) for your house project.</p>
+                    <p class="mt-2"><strong>Note:</strong> Make sure your virtual environment is activated (you see (env) at the start of your command line) before running this.</p>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-red-600 mb-4">Step 4: Create Django Project & Apps</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Project vs Apps - The House Analogy</h4>
+                    <p>Imagine you're building a house (project) with different rooms (apps):</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><span class="keyword">Project (Fashionista)</span> - The whole house property with address</li>
+                        <li><span class="keyword">Accounts app</span> - Like the front door and security system (handles logins)</li>
+                        <li><span class="keyword">Products app</span> - Like the showroom (displays fashion items)</li>
+                        <li><span class="keyword">Core app</span> - Like the foundation and shared walls (common features)</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg mb-4">
+                    <pre><code># Create the main Django project
+django-admin startproject Fashionista .</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What this does:</strong> Creates all the basic files needed for a Django project. The dot (.) at the end means "create it in the current folder" instead of making a new folder.</p>
+                    <p class="mt-2"><strong>Files created:</strong></p>
+                    <ul class="list-disc pl-5">
+                        <li><code>manage.py</code> - The project's control center (like a remote control for the house)</li>
+                        <li><code>Fashionista/</code> folder - Contains main configuration files</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Create individual apps
+python manage.py startapp accounts
+python manage.py startapp products
+python manage.py startapp core</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What this does:</strong> Creates three separate apps (modules) for our project. Each gets its own folder with files for models, views, etc.</p>
+                    <p class="mt-2"><strong>App structure example (accounts):</strong></p>
+                    <ul class="list-disc pl-5">
+                        <li><code>migrations/</code> - Database change history</li>
+                        <li><code>admin.py</code> - Admin panel configuration</li>
+                        <li><code>models.py</code> - Database models (like user accounts)</li>
+                        <li><code>views.py</code> - Handles web page logic</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-indigo-600 mb-4">Step 5: Configure Django Settings</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Settings.py - The Control Panel</h4>
+                    <p>This file is like the main control panel for your Django project. It's where you:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Register which apps are installed</li>
+                        <li>Set up database connections</li>
+                        <li>Configure security settings</li>
+                        <li>Define where files are stored</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># In Fashionista/settings.py
+INSTALLED_APPS = [
+    'django.contrib.admin',        # Built-in admin interface
+    'django.contrib.auth',         # User authentication system
+    'django.contrib.contenttypes', # Tracks models in database
+    'django.contrib.sessions',    # Remembers users between visits
+    'django.contrib.messages',    # System for showing notifications
+    'django.contrib.staticfiles', # Handles CSS, JavaScript, images
+    'rest_framework',             # Adds API capabilities
+    'accounts',                   # Our custom user accounts app
+    'products',                  # Our fashion products app
+    'core',                      # Shared functionality
+]
+
+# Database configuration (SQLite for development)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # Stores database in a file
+    }
+}
+
+# Static and media files
+STATIC_URL = 'static/'   # URL for CSS/JS files
+MEDIA_URL = 'media/'     # URL for user-uploaded files
+MEDIA_ROOT = BASE_DIR / 'media'  # Where uploaded files are saved</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>Key Settings Explained:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>INSTALLED_APPS</code> - Like registering which rooms exist in your house. Django needs to know about all apps you're using.</li>
+                        <li><code>DATABASES</code> - Configures where data is stored. SQLite is perfect for learning as it uses a simple file.</li>
+                        <li><code>STATIC/MEDIA</code> - Sets up where design files (CSS, images) and user uploads (profile pictures) are stored.</li>
+                    </ul>
+                    <p class="mt-2"><strong>Important:</strong> Always add new apps to INSTALLED_APPS when you create them!</p>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-yellow-600 mb-4">Step 6: Set Up URL Routing</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">URLs - The Address System</h4>
+                    <p>URL routing is like the address system for your website. When someone visits:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>yourdomain.com/admin</code> - They get the admin panel</li>
+                        <li><code>yourdomain.com/api/accounts</code> - They interact with user accounts</li>
+                        <li><code>yourdomain.com/api/products</code> - They see fashion products</li>
+                    </ul>
+                    <p class="mt-2">The URL configuration decides which part of your code handles each address.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># In Fashionista/urls.py
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),           # Admin panel URLs
+    path('api/accounts/', include('accounts.urls')), # All account URLs
+    path('api/products/', include('products.urls')), # All product URLs
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>How This Works:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>path()</code> - Defines a URL route and what to show there</li>
+                        <li><code>include()</code> - Says "look for more URLs in this app's url file"</li>
+                        <li>The <code>static()</code> part enables serving uploaded files during development</li>
+                    </ul>
+                    <p class="mt-2"><strong>Note:</strong> We'll create the <code>accounts/urls.py</code> and <code>products/urls.py</code> files later.</p>
+                </div>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-pink-600 mb-4">Step 7: Database Setup</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Migrations - Database Blueprints</h4>
+                    <p>Django uses a system called <span class="keyword">migrations</span> to manage database changes. Think of it like:</p>
+                    <ol class="list-decimal pl-5 mt-2 space-y-1">
+                        <li>You design how your database should look (models)</li>
+                        <li>Django creates "migration" files - instructions for building that structure</li>
+                        <li>Running migrations actually builds the database tables</li>
+                    </ol>
+                    <p class="mt-2">This lets you change your database structure safely over time.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Run migrations to create database tables
+python manage.py migrate</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What Happens:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Django checks all installed apps for migration files</li>
+                        <li>It creates the SQLite database file (<code>db.sqlite3</code>) if it doesn't exist</li>
+                        <li>It runs all migrations to create the initial database tables</li>
+                    </ul>
+                    <p class="mt-2"><strong>Result:</strong> Your database now has tables for users, sessions, etc. that Django needs to work.</p>
+                </div>
+            </div>
+
+            <!-- Step 8 -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-gray-600 mb-4">Step 8: Create Admin User</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">The Admin Panel - Your Control Room</h4>
+                    <p>Django automatically creates an admin interface where you can:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Manage users</li>
+                        <li>View/edit database content</li>
+                        <li>Configure site settings</li>
+                    </ul>
+                    <p class="mt-2">To use it, we need to create a superuser account with full access.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Create superuser account
+python manage.py createsuperuser</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What Happens When You Run This:</strong></p>
+                    <ol class="list-decimal pl-5 mt-2 space-y-1">
+                        <li>You'll be prompted to enter a username (can be 'admin')</li>
+                        <li>Enter an email address (can be fake for learning)</li>
+                        <li>Enter a password (make it something memorable)</li>
+                    </ol>
+                    <p class="mt-2">This creates a special user account that can access everything in the admin panel.</p>
+                </div>
+            </div>
+
+            <!-- Step 9 -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-teal-600 mb-4">Step 9: Test Your Setup</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Development Server - Your Project Preview</h4>
+                    <p>Django includes a lightweight web server for testing. It's not for production use, but perfect for:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Checking your work as you build</li>
+                        <li>Seeing how pages will look</li>
+                        <li>Testing features before deploying</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg mb-4">
+                    <pre><code># Start the development server
+python manage.py runserver</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What This Does:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Starts a web server on your computer</li>
+                        <li>Listens on port 8000 by default</li>
+                        <li>Shows debug information in the terminal</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Visit these URLs in your browser:
+# http://127.0.0.1:8000/ - Main site (will show error until we add pages)
+# http://127.0.0.1:8000/admin - Admin panel (login with superuser)</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What You Should See:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>The main site will show a Django welcome page or error (normal at this stage)</li>
+                        <li>The admin panel should show a login screen - enter your superuser credentials</li>
+                        <li>Once logged in, you'll see the admin dashboard with sections for Users, Groups, etc.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Day 2 Section -->
+    <section id="day2" class="hidden py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12">Day 2: User Authentication with JWT</h2>
+            
+            <!-- JWT Theory -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-purple-600 mb-4">Understanding JWT Authentication</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">What is JWT? (Cookie-Free Authentication)</h4>
+                    <p>Traditional websites use cookies to remember logged-in users. JWTs (JSON Web Tokens) are a modern alternative that works especially well for APIs. Here's how it works:</p>
+                    
+                    <div class="mt-4 grid md:grid-cols-3 gap-4">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h5 class="font-bold">1. Login</h5>
+                            <p>User sends username/password</p>
+                            <p>→ Server verifies and creates JWT</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h5 class="font-bold">2. Token</h5>
+                            <p>Server sends back a signed token containing user info</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h5 class="font-bold">3. Requests</h5>
+                            <p>User sends token with each request</p>
+                            <p>→ Server verifies token</p>
+                        </div>
+                    </div>
+                    
+                    <p class="mt-4"><strong>Why JWT for our Fashionista project?</strong> It works perfectly with mobile apps and frontend frameworks like React, which we might add later.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center p-4 bg-blue-50 rounded-lg">
+                        <div class="text-3xl mb-2">🔐</div>
+                        <h4 class="font-bold">Secure</h4>
+                        <p>Tokens are digitally signed and can't be modified</p>
+                    </div>
+                    <div class="text-center p-4 bg-green-50 rounded-lg">
+                        <div class="text-3xl mb-2">⚡</div>
+                        <h4 class="font-bold">Stateless</h4>
+                        <p>Server doesn't need to store token info</p>
+                    </div>
+                    <div class="text-center p-4 bg-purple-50 rounded-lg">
+                        <div class="text-3xl mb-2">🌐</div>
+                        <h4 class="font-bold">Universal</h4>
+                        <p>Works across web, mobile, and other clients</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JWT Installation -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-blue-600 mb-4">Step 1: Install JWT Package</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Why djangorestframework-simplejwt?</h4>
+                    <p>While we could implement JWT ourselves, this package provides:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Ready-to-use token generation</li>
+                        <li>Token refresh functionality</li>
+                        <li>Secure token verification</li>
+                        <li>Easy integration with Django REST Framework</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Install JWT package for Django
+pip install djangorestframework-simplejwt</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>What This Does:</strong> Installs the SimpleJWT package that adds JWT authentication capabilities to Django REST Framework.</p>
+                    <p class="mt-2"><strong>Remember:</strong> Run this with your virtual environment activated!</p>
+                </div>
+            </div>
+
+            <!-- JWT Configuration -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-green-600 mb-4">Step 2: Configure JWT Settings</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Token Lifetimes Explained</h4>
+                    <p>JWTs have two types of tokens:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><span class="keyword">Access Token</span> - Short-lived (minutes/hours) used for regular requests</li>
+                        <li><span class="keyword">Refresh Token</span> - Longer-lived (days/weeks) used to get new access tokens</li>
+                    </ul>
+                    <p class="mt-2">This balances security (frequent re-authentication) with user convenience (not logging in constantly).</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Add to settings.py
+from datetime import timedelta
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>Configuration Details:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>DEFAULT_AUTHENTICATION_CLASSES</code> tells DRF to use JWT by default</li>
+                        <li><code>ACCESS_TOKEN_LIFETIME</code> sets how long access tokens are valid (60 minutes here)</li>
+                        <li><code>REFRESH_TOKEN_LIFETIME</code> sets how long refresh tokens work (1 day here)</li>
+                    </ul>
+                    <p class="mt-2"><strong>Tip:</strong> In production, you might set access tokens to 15-30 minutes and refresh tokens to 7-30 days.</p>
+                </div>
+            </div>
+
+            <!-- User Model -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-purple-600 mb-4">Step 3: Create Custom User Model</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Why Custom User Model?</h4>
+                    <p>Django comes with a built-in User model, but it's better to create a custom one because:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>We want to use email as the login instead of username</li>
+                        <li>We might need to add custom fields later (phone number, profile picture, etc.)</li>
+                        <li>It's harder to switch after you've already created the database</li>
+                    </ul>
+                    <p class="mt-2"><strong>Best Practice:</strong> Always start projects with a custom user model, even if it's identical to the default at first.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># In accounts/models.py
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+class User(AbstractUser):
+    email = models.EmailField(unique=True)  # Email must be unique
+    phone = models.CharField(max_length=15, blank=True)  # Optional phone
+    
+    # Use email instead of username for authentication
+    USERNAME_FIELD = 'email'
+    
+    # When creating superuser, it will prompt for these fields
+    REQUIRED_FIELDS = ['username']
+    
+    def __str__(self):
+        return self.email</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>Key Components:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>AbstractUser</code> - The base Django user model we're extending</li>
+                        <li><code>unique=True</code> - Ensures no two users can have the same email</li>
+                        <li><code>USERNAME_FIELD</code> - Tells Django to use email for login</li>
+                        <li><code>REQUIRED_FIELDS</code> - Fields needed when creating superusers</li>
+                        <li><code>__str__</code> - How the user will be displayed in admin</li>
+                    </ul>
+                </div>
+
+                <div class="explanation-box p-6 rounded-lg mt-6">
+                    <h4 class="font-bold text-lg mb-2">Update Settings.py</h4>
+                    <p>We need to tell Django to use our custom user model instead of the default one.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># In Fashionista/settings.py
+AUTH_USER_MODEL = 'accounts.User'</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>Important:</strong> This setting must be added <strong>before</strong> running your first migrations. If you already ran migrations, you'll need to delete your database file and migration files before proceeding.</p>
+                </div>
+            </div>
+
+            <!-- Registration API -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-red-600 mb-4">Step 4: Create Registration API</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Registration Flow</h4>
+                    <p>When a new user signs up, our API will:</p>
+                    <ol class="list-decimal pl-5 mt-2 space-y-1">
+                        <li>Receive email, username, and password</li>
+                        <li>Validate the data (check email format, password strength)</li>
+                        <li>Create a new user in the database</li>
+                        <li>Return a success message or errors</li>
+                    </ol>
+                    <p class="mt-2">We'll use Django REST Framework's serializers to handle data conversion and validation.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Create accounts/serializers.py
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+
+# Get our custom user model
+User = get_user_model()
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    # Password field won't be included in response
+    password = serializers.CharField(write_only=True)
+    
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'password']
+    
+    def create(self, validated_data):
+        # Create and return a new user instance
+        user = User.objects.create_user(
+            email=validated_data['email'],
+            username=validated_data['username'],
+            password=validated_data['password']
+        )
+        return user</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>Serializer Breakdown:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>ModelSerializer</code> - Automatically generates fields based on the model</li>
+                        <li><code>write_only=True</code> - Password will be used for creation but not returned in API responses</li>
+                        <li><code>create_user()</code> - Django's method that properly hashes passwords</li>
+                        <li><code>validated_data</code> - Contains already validated input data</li>
+                    </ul>
+                    <p class="mt-2"><strong>Security Note:</strong> Never store or return plain text passwords!</p>
+                </div>
+            </div>
+
+            <!-- Login API -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-indigo-600 mb-4">Step 5: Create Login API</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Login Flow</h4>
+                    <p>When a user logs in, our API will:</p>
+                    <ol class="list-decimal pl-5 mt-2 space-y-1">
+                        <li>Receive email and password</li>
+                        <li>Verify credentials against database</li>
+                        <li>If valid, generate JWT tokens</li>
+                        <li>Return tokens to the user</li>
+                        <li>If invalid, return error message</li>
+                    </ol>
+                    <p class="mt-2">We'll extend DRF's built-in token view to customize the response.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># In accounts/views.py
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import UserRegistrationSerializer
+
+class RegisterView(generics.CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+    
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+            "message": "User created successfully",
+            "user": serializer.data
+        }, status=status.HTTP_201_CREATED)
+
+class LoginView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        # Get the response from the original TokenObtainPairView
+        response = super().post(request, *args, **kwargs)
+        
+        # Customize the response
+        return Response({
+            "access_token": response.data['access'],
+            "refresh_token": response.data['refresh'],
+            "message": "Login successful"
+        }, status=status.HTTP_200_OK)</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>View Components:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>RegisterView</code> - Handles POST requests to create new users</li>
+                        <li><code>LoginView</code> - Extends JWT's token view to customize response format</li>
+                        <li><code>raise_exception=True</code> - Automatically returns error responses for invalid data</li>
+                        <li><code>status.HTTP_201_CREATED</code> - Proper status code for resource creation</li>
+                    </ul>
+                    <p class="mt-2"><strong>Note:</strong> The parent <code>TokenObtainPairView</code> already handles all the JWT generation logic - we're just customizing how it's returned.</p>
+                </div>
+            </div>
+
+            <!-- URL Setup -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8">
+                <h3 class="text-2xl font-bold text-yellow-600 mb-4">Step 6: Set Up API URLs</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">API Endpoints</h4>
+                    <p>We need to create URLs that map to our views:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>api/accounts/register/</code> - For new user signups</li>
+                        <li><code>api/accounts/login/</code> - For existing users to log in</li>
+                    </ul>
+                    <p class="mt-2">This follows RESTful conventions where accounts-related endpoints are grouped under <code>api/accounts/</code>.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Create accounts/urls.py
+from django.urls import path
+from .views import RegisterView, LoginView
+
+urlpatterns = [
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', LoginView.as_view(), name='login'),
+]</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>URL Configuration:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>path()</code> - Defines a URL pattern and which view handles it</li>
+                        <li><code>.as_view()</code> - Converts class-based views to Django's expected format</li>
+                        <li><code>name=</code> - Lets us refer to this URL elsewhere in code</li>
+                    </ul>
+                    <p class="mt-2"><strong>Remember:</strong> These URLs are included in the main <code>Fashionista/urls.py</code> under <code>api/accounts/</code> as shown in Day 1.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 Django Fashionista Tutorial. Complete beginner's guide to building web applications with Django.</p>
+            <p class="mt-2 text-gray-400">All code examples include detailed explanations for absolute beginners.</p>
+        </div>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = ['theory', 'day1', 'day2'];
+            sections.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+        
+        // Show theory section by default
+        showSection('theory');
+    </script>
+</body>
+</html>
