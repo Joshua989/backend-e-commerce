@@ -57,6 +57,8 @@
                 <button onclick="showSection('theory')" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Theory</button>
                 <button onclick="showSection('day1')" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Day 1: Setup</button>
                 <button onclick="showSection('day2')" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">Day 2: Authentication</button>
+                <button onclick="showSection('day3')" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-purple-600">Day 3: Profile </button>
+
             </div>
         </div>
     </nav>
@@ -779,6 +781,470 @@ urlpatterns = [
             </div>
         </div>
     </section>
+        <!-- Day 3 Section -->
+    <section id="day3" class="hidden py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12">Day 3: User Profiles & Password Management</h2>
+            
+            <!-- Overview -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-purple-600 mb-4">What We're Building Today</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Profile System Features</h4>
+                    <p>Today we'll enhance our user accounts with:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><span class="keyword">Profile viewing/editing</span> - Let users see and update their info</li>
+                        <li><span class="keyword">Password changes</span> - Secure password updates without logging out</li>
+                        <li><span class="keyword">Profile pictures</span> - Image upload and display functionality</li>
+                    </ul>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-lg mb-2">📁 File Structure Updates</h4>
+                        <div class="bg-gray-800 text-gray-200 p-3 rounded font-mono text-sm">
+                            <div>accounts/</div>
+                            <div class="ml-4">├── migrations/ <span class="text-gray-400"># Database change history</span></div>
+                            <div class="ml-4">├── models.py <span class="text-gray-400"># Data structure definitions</span></div>
+                            <div class="ml-4">├── serializers.py <span class="text-gray-400"># Data converters</span></div>
+                            <div class="ml-4">├── views.py <span class="text-gray-400"># Business logic</span></div>
+                            <div class="ml-4">├── urls.py <span class="text-gray-400"># Web addresses</span></div>
+                            <div class="ml-4">└── admin.py <span class="text-gray-400"># Control panel config</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-lg mb-2">🔧 Tools We'll Use</h4>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><code>ImageField</code> - For profile picture storage</li>
+                            <li><code>ModelSerializer</code> - For data validation</li>
+                            <li><code>RetrieveUpdateAPIView</code> - For profile operations</li>
+                            <li><code>update_session_auth_hash</code> - For seamless password changes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 1: Extending User Model -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-blue-600 mb-4">Step 1: Extending the User Profile (models.py)</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Why Extend the User Model?</h4>
+                    <p>Django's default user model only has basic fields (username, email, password). We want to add:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Profile pictures for personalization</li>
+                        <li>Bio for user descriptions</li>
+                        <li>Phone number for contact info</li>
+                        <li>Birth date for age verification (optional)</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># accounts/models.py
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    # Profile picture that gets saved to 'media/profiles/' folder
+    profile_picture = models.ImageField(
+        upload_to='profiles/', 
+        blank=True  # Optional field
+    )
+    
+    # Text field for user biography
+    bio = models.TextField(
+        blank=True,  # Optional
+        help_text="Tell others about yourself"
+    )
+    
+    # Phone number field
+    phone_number = models.CharField(
+        max_length=20,  # Stores numbers with country codes (+1, +44)
+        blank=True      # Optional
+    )
+    
+    # Date field for birthday
+    birth_date = models.DateField(
+        null=True,   # Can be empty in database
+        blank=True   # Optional in forms
+    )</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>Field-by-Field Explanation:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>ImageField</code>: Special field for image uploads. <code>upload_to</code> specifies subdirectory in media folder.</li>
+                        <li><code>blank=True</code>: Makes field optional in forms/admin.</li>
+                        <li><code>null=True</code>: Allows empty values in database (different from blank).</li>
+                        <li><code>help_text</code>: Appears as hint in admin panel.</li>
+                    </ul>
+                    <p class="mt-2"><strong>Migration Required:</strong> After changing models, run:</p>
+                    <div class="code-block p-2 rounded-lg mt-2">
+                        <pre><code>python manage.py makemigrations
+python manage.py migrate</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Profile Serializers -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-green-600 mb-4">Step 2: Creating Profile Serializers (serializers.py)</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">What Are Serializers?</h4>
+                    <p>Serializers are like translators that:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Convert complex data (models) to Python datatypes (JSON)</li>
+                        <li>Validate incoming data meets requirements</li>
+                        <li>Handle file uploads (like profile pictures)</li>
+                    </ul>
+                    <p class="mt-2">We need two serializers because password changes require special handling.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># accounts/serializers.py
+from rest_framework import serializers
+from .models import User
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'username', 
+            'email', 
+            'profile_picture', 
+            'bio', 
+            'phone_number', 
+            'birth_date'
+        ]
+        extra_kwargs = {
+            'email': {'read_only': True}  # Prevent email changes
+        }
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(
+        required=True,
+        style={'input_type': 'password'}
+    )
+    new_password = serializers.CharField(
+        required=True,
+        min_length=8,
+        style={'input_type': 'password'}
+    )</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>Key Components Explained:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>ProfileSerializer</code>:
+                            <ul class="list-disc pl-5 mt-1">
+                                <li><code>ModelSerializer</code>: Auto-generates fields from model</li>
+                                <li><code>extra_kwargs</code>: Additional field settings (making email read-only)</li>
+                            </ul>
+                        </li>
+                        <li><code>ChangePasswordSerializer</code>:
+                            <ul class="list-disc pl-5 mt-1">
+                                <li><code>Serializer</code>: Basic serializer (not tied to model)</li>
+                                <li><code>style={'input_type': 'password'}</code>: Makes passwords appear as dots</li>
+                                <li><code>min_length=8</code>: Enforces password strength</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 3: Profile Views -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-purple-600 mb-4">Step 3: Building Profile Views (views.py)</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Understanding the Views</h4>
+                    <p>We'll create two main views:</p>
+                    <ol class="list-decimal pl-5 mt-2 space-y-1">
+                        <li><strong>ProfileView</strong>: Handles viewing and updating profile info</li>
+                        <li><strong>ChangePasswordView</strong>: Manages secure password changes</li>
+                    </ol>
+                    <p class="mt-2">Both require authentication and use different serializers.</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># accounts/views.py
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from django.contrib.auth import update_session_auth_hash
+from .serializers import ProfileSerializer, ChangePasswordSerializer
+
+class ProfileView(generics.RetrieveUpdateAPIView):
+    """
+    Handles both retrieving and updating user profiles
+    """
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        # Returns the currently authenticated user
+        return self.request.user
+
+class ChangePasswordView(generics.UpdateAPIView):
+    """
+    Handles password changes with old password verification
+    """
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        user = self.request.user
+        serializer = self.get_serializer(data=request.data)
+        
+        # Validate the incoming data
+        serializer.is_valid(raise_exception=True)
+        
+        # Check if old password is correct
+        if not user.check_password(serializer.data.get('old_password')):
+            return Response(
+                {"error": "Wrong password"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        # Set and save the new password
+        user.set_password(serializer.data.get('new_password'))
+        user.save()
+        
+        # Keep the user logged in after password change
+        update_session_auth_hash(request, user)
+        
+        return Response(
+            {"message": "Password updated successfully"},
+            status=status.HTTP_200_OK
+        )</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>View Logic Explained:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>RetrieveUpdateAPIView</code>: Combines GET (retrieve) and PUT/PATCH (update) operations</li>
+                        <li><code>permissions.IsAuthenticated</code>: Only logged-in users can access</li>
+                        <li><code>get_object</code>: Returns the current user automatically</li>
+                        <li><code>check_password()</code>: Verifies old password matches</li>
+                        <li><code>set_password()</code>: Properly hashes new password</li>
+                        <li><code>update_session_auth_hash</code>: Prevents forced logout after password change</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 4: URL Configuration -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-red-600 mb-4">Step 4: Setting Up URLs (urls.py)</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">URL Routing Basics</h4>
+                    <p>URLs act as addresses for your API endpoints. We'll:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Create new paths for profile and password operations</li>
+                        <li>Keep them under <code>/api/accounts/</code> for consistency</li>
+                        <li>Use clear, descriptive names for each route</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># accounts/urls.py
+from django.urls import path
+from .views import (
+    ProfileView,
+    ChangePasswordView,
+    # ... previous login/register views
+)
+
+urlpatterns = [
+    # Profile management
+    path('profile/', ProfileView.as_view(), name='profile'),
+    
+    # Password change
+    path('change-password/', ChangePasswordView.as_view(), name='change-password'),
+    
+    # ... previous authentication URLs
+]</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>URL Patterns Explained:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>profile/</code>: Handles both viewing and updating profile</li>
+                        <li><code>change-password/</code>: Dedicated endpoint for password changes</li>
+                        <li><code>.as_view()</code>: Converts class-based view to function Django can use</li>
+                        <li><code>name=</code>: Allows reverse URL lookups in templates/views</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 5: Media Configuration -->
+            <div class="step-card bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-indigo-600 mb-4">Step 5: Configuring Media Files (settings.py)</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Handling File Uploads</h4>
+                    <p>Django needs special configuration to:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Store uploaded files (profile pictures)</li>
+                        <li>Serve them during development</li>
+                        <li>Manage file paths and URLs</li>
+                    </ul>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Fashionista/settings.py
+import os  # Needed for file path operations
+
+# Base directory of the project
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Media files (user-uploaded content)
+MEDIA_URL = '/media/'  # URL prefix for media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Local storage path</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>Configuration Details:</strong></p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li><code>MEDIA_URL</code>: The web address prefix (e.g., <code>http://yoursite.com/media/profile.jpg</code>)</li>
+                        <li><code>MEDIA_ROOT</code>: The actual folder on your server where files are saved</li>
+                        <li><code>os.path.join</code>: Safely combines path parts for different operating systems</li>
+                    </ul>
+                </div>
+
+                <div class="explanation-box p-6 rounded-lg mt-6">
+                    <h4 class="font-bold text-lg mb-2">Update Main URLs</h4>
+                    <p>Add this to your project's main <code>urls.py</code> to serve media files during development:</p>
+                </div>
+
+                <div class="code-block p-4 rounded-lg">
+                    <pre><code># Fashionista/urls.py
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    # ... your existing URL patterns
+] 
+
+# Only in development (DEBUG=True)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)</code></pre>
+                </div>
+                <div class="code-explanation">
+                    <p><strong>Important Note:</strong> In production, you should configure your web server (Nginx, Apache) to serve media files - Django shouldn't handle this in production for performance and security reasons.</p>
+                </div>
+            </div>
+
+            <!-- Testing Section -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-teal-600 mb-4">Testing Your Endpoints</h3>
+                
+                <div class="explanation-box p-6 rounded-lg mb-6">
+                    <h4 class="font-bold text-lg mb-2">Using Postman for API Testing</h4>
+                    <p>Test your new endpoints with these requests:</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-bold mb-2">1. View/Update Profile</h4>
+                        <div class="code-block p-3 rounded-lg mb-2">
+                            <pre><code>GET /api/accounts/profile/</code></pre>
+                        </div>
+                        <div class="code-block p-3 rounded-lg">
+                            <pre><code>PUT /api/accounts/profile/
+Headers: { "Authorization": "Bearer YOUR_TOKEN" }
+Body: {
+    "bio": "Fashion enthusiast",
+    "phone_number": "+1234567890"
+}</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold mb-2">2. Change Password</h4>
+                        <div class="code-block p-3 rounded-lg">
+                            <pre><code>PUT /api/accounts/change-password/
+Headers: { "Authorization": "Bearer YOUR_TOKEN" }
+Body: {
+    "old_password": "current123",
+    "new_password": "newsecure123"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-purple-50 p-4 rounded-lg">
+                    <h4 class="font-bold mb-2">3. Upload Profile Picture</h4>
+                    <p>In Postman:</p>
+                    <ol class="list-decimal pl-5 mt-2 space-y-1">
+                        <li>Set request to <code>PUT /api/accounts/profile/</code></li>
+                        <li>Under "Body", select <code>form-data</code></li>
+                        <li>Add key <code>profile_picture</code> with type "file"</li>
+                        <li>Select an image file to upload</li>
+                        <li>Send the request</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Security Considerations -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-yellow-600 mb-4">Security Considerations</h3>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-red-700 mb-2">🔒 Must-Do Security Practices</h4>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li>Always use HTTPS in production</li>
+                            <li>Never store plain text passwords</li>
+                            <li>Validate all incoming data</li>
+                            <li>Require strong passwords (min 8 chars, mixed case)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-green-700 mb-2">✅ Django's Built-in Protections</h4>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li>Automatic password hashing</li>
+                            <li>CSRF protection</li>
+                            <li>Secure session management</li>
+                            <li>XSS protection headers</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h3 class="text-2xl font-bold text-gray-700 mb-4">What We've Accomplished</h3>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold mb-2">✅ New Features Added</h4>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li>Extended user profiles with additional fields</li>
+                            <li>Secure profile viewing/editing</li>
+                            <li>Password changes without logout</li>
+                            <li>Profile picture uploads</li>
+                            <li>Proper media file handling</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-bold mb-2">🔜 Next Steps (Day 4)</h4>
+                        <p>We'll build the product catalog system with:</p>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li>Product categories</li>
+                            <li>Item listings with images</li>
+                            <li>Search and filtering</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6 text-center">
+                    <button class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Continue to Day 4: Product Catalog System
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8">
@@ -791,7 +1257,7 @@ urlpatterns = [
     <script>
         function showSection(sectionId) {
             // Hide all sections
-            const sections = ['theory', 'day1', 'day2'];
+            const sections = ['theory', 'day1', 'day2', 'day3'];
             sections.forEach(id => {
                 document.getElementById(id).classList.add('hidden');
             });
